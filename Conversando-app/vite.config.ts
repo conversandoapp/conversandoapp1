@@ -34,4 +34,7 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
+    preview: {
+    allowedHosts: ["conversandoapp1.onrender.com"],
+  },
 });
