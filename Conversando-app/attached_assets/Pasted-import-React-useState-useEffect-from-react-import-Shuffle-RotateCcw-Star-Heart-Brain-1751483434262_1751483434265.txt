@@ -1,0 +1,548 @@
+import React, { useState, useEffect } from 'react';
+import { Shuffle, RotateCcw, Star, Heart, Brain } from 'lucide-react';
+
+const ReflectionCardGame = () => {
+  // Mezclar array de preguntas al inicializar
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Función para mezclar array
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Inicializar preguntas mezcladas
+  useEffect(() => {
+    setShuffledQuestions(shuffleArray(reflectionQuestions));
+  }, []);
+
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [favorites, setFavorites] = useState(new Set());
+
+  const reflectionQuestions = [
+    {
+      question: "¿Qué momento de tu vida cambió completamente tu perspectiva?",
+      category: "Crecimiento Personal",
+      color: "from-purple-600 to-pink-600"
+    },
+    {
+      question: "Si pudieras dar un consejo a tu yo de hace 10 años, ¿cuál sería?",
+      category: "Sabiduría",
+      color: "from-blue-600 to-cyan-600"
+    },
+    {
+      question: "¿Qué actividad te hace perder completamente la noción del tiempo?",
+      category: "Pasión",
+      color: "from-orange-600 to-red-600"
+    },
+    {
+      question: "¿Cuál es la creencia más limitante que has logrado superar?",
+      category: "Superación",
+      color: "from-green-600 to-teal-600"
+    },
+    {
+      question: "¿Qué significa para ti vivir una vida auténtica?",
+      category: "Autenticidad",
+      color: "from-indigo-600 to-purple-600"
+    },
+    {
+      question: "¿Cuál es el mayor riesgo que has tomado y valió la pena?",
+      category: "Valentía",
+      color: "from-yellow-600 to-orange-600"
+    },
+    {
+      question: "¿Qué tradición familiar o cultural aprecias más y por qué?",
+      category: "Herencia",
+      color: "from-rose-600 to-pink-600"
+    },
+    {
+      question: "¿En qué momento te has sentido más conectado contigo mismo?",
+      category: "Autoconocimiento",
+      color: "from-emerald-600 to-green-600"
+    },
+    {
+      question: "¿Qué pequeño gesto de bondad nunca olvidarás?",
+      category: "Compasión",
+      color: "from-sky-600 to-blue-600"
+    },
+    {
+      question: "¿Cuál es tu definición personal del éxito?",
+      category: "Propósito",
+      color: "from-violet-600 to-purple-600"
+    },
+    {
+      question: "¿Qué te gustaría que recordaran de ti cuando ya no estés?",
+      category: "Legado",
+      color: "from-amber-600 to-yellow-600"
+    },
+    {
+      question: "¿Cuál es la lección más valiosa que has aprendido del fracaso?",
+      category: "Resiliencia",
+      color: "from-red-600 to-rose-600"
+    },
+    {
+      question: "¿Qué aspecto de la naturaleza humana te fascina más?",
+      category: "Humanidad",
+      color: "from-teal-600 to-cyan-600"
+    },
+    {
+      question: "¿Cuándo fue la última vez que hiciste algo por primera vez?",
+      category: "Aventura",
+      color: "from-lime-600 to-green-600"
+    },
+    {
+      question: "¿Qué silencio has roto que cambió tu vida para mejor?",
+      category: "Coraje",
+      color: "from-fuchsia-600 to-pink-600"
+    },
+    {
+      question: "¿Cuál es el mayor sacrificio que has hecho por amor?",
+      category: "Amor",
+      color: "from-pink-600 to-rose-600"
+    },
+    {
+      question: "¿Qué habilidad te hubiera gustado aprender de niño?",
+      category: "Nostalgia",
+      color: "from-cyan-600 to-blue-600"
+    },
+    {
+      question: "¿En qué situación has tenido que elegir entre la razón y el corazón?",
+      category: "Decisiones",
+      color: "from-purple-600 to-indigo-600"
+    },
+    {
+      question: "¿Qué te da más miedo: el éxito o el fracaso? ¿Por qué?",
+      category: "Miedos",
+      color: "from-gray-600 to-slate-600"
+    },
+    {
+      question: "¿Cuál es la mentira más grande que te has dicho a ti mismo?",
+      category: "Honestidad",
+      color: "from-red-600 to-orange-600"
+    },
+    {
+      question: "¿Qué persona que ya no está en tu vida te enseñó algo valioso?",
+      category: "Memoria",
+      color: "from-blue-600 to-purple-600"
+    },
+    {
+      question: "¿En qué momento de tu vida te has sentido más vulnerable?",
+      category: "Vulnerabilidad",
+      color: "from-teal-600 to-green-600"
+    },
+    {
+      question: "¿Qué privilegio que tienes a menudo das por sentado?",
+      category: "Gratitud",
+      color: "from-yellow-600 to-amber-600"
+    },
+    {
+      question: "¿Cuál es la diferencia entre quien eres y quien aparentas ser?",
+      category: "Autenticidad",
+      color: "from-indigo-600 to-pink-600"
+    },
+    {
+      question: "¿Qué experiencia difícil te ha hecho más empático?",
+      category: "Empatía",
+      color: "from-green-600 to-cyan-600"
+    },
+    {
+      question: "¿Cuál es el complejo o inseguridad que más te ha limitado?",
+      category: "Inseguridades",
+      color: "from-slate-600 to-gray-600"
+    },
+    {
+      question: "¿Qué decisión has postergado demasiado tiempo?",
+      category: "Procrastinación",
+      color: "from-orange-600 to-red-600"
+    },
+    {
+      question: "¿En qué aspecto de tu vida necesitas ser más honesto?",
+      category: "Honestidad",
+      color: "from-blue-600 to-teal-600"
+    },
+    {
+      question: "¿Qué patrón destructivo has logrado romper?",
+      category: "Crecimiento",
+      color: "from-purple-600 to-violet-600"
+    },
+    {
+      question: "¿Cuál es la pregunta que más temes que te hagan?",
+      category: "Miedos",
+      color: "from-red-600 to-pink-600"
+    },
+    {
+      question: "¿Qué aspecto de tu personalidad has heredado y cuál has construido?",
+      category: "Identidad",
+      color: "from-cyan-600 to-purple-600"
+    },
+    {
+      question: "¿En qué momento has tenido que elegir entre tu felicidad y la de otros?",
+      category: "Dilemas",
+      color: "from-amber-600 to-orange-600"
+    },
+    {
+      question: "¿Qué te hubiera dicho tu yo de 5 años sobre tu vida actual?",
+      category: "Perspectiva",
+      color: "from-lime-600 to-teal-600"
+    },
+    {
+      question: "¿Cuál es la emoción que más te cuesta expresar?",
+      category: "Emociones",
+      color: "from-rose-600 to-red-600"
+    },
+    {
+      question: "¿Qué te has perdonado recientemente?",
+      category: "Perdón",
+      color: "from-green-600 to-blue-600"
+    },
+    {
+      question: "¿En qué situación has actuado en contra de tus valores?",
+      category: "Valores",
+      color: "from-indigo-600 to-slate-600"
+    },
+    {
+      question: "¿Qué relación en tu vida necesita más atención?",
+      category: "Relaciones",
+      color: "from-pink-600 to-purple-600"
+    },
+    {
+      question: "¿Cuál es la versión de ti que más extrañas?",
+      category: "Nostalgia",
+      color: "from-blue-600 to-cyan-600"
+    },
+    {
+      question: "¿Qué conversación importante has estado evitando?",
+      category: "Comunicación",
+      color: "from-yellow-600 to-red-600"
+    },
+    {
+      question: "¿En qué área de tu vida eres más crítico contigo mismo?",
+      category: "Autocrítica",
+      color: "from-gray-600 to-purple-600"
+    },
+    {
+      question: "¿Qué creencia sobre ti mismo ha cambiado más en los últimos años?",
+      category: "Evolución",
+      color: "from-teal-600 to-pink-600"
+    },
+    {
+      question: "¿Cuál es el mayor acto de rebeldía que has cometido contra las expectativas?",
+      category: "Rebeldía",
+      color: "from-orange-600 to-purple-600"
+    },
+    {
+      question: "¿Qué aspecto de tu infancia aún influye en tus decisiones actuales?",
+      category: "Infancia",
+      color: "from-cyan-600 to-green-600"
+    },
+    {
+      question: "¿En qué momento has sentido que realmente 'creciste'?",
+      category: "Madurez",
+      color: "from-violet-600 to-blue-600"
+    },
+    {
+      question: "¿Qué te ha costado más trabajo aceptar sobre ti mismo?",
+      category: "Aceptación",
+      color: "from-red-600 to-teal-600"
+    },
+    {
+      question: "¿Cuál es la diferencia entre lo que necesitas y lo que deseas?",
+      category: "Necesidades",
+      color: "from-amber-600 to-pink-600"
+    },
+    {
+      question: "¿Qué ritual o rutina te conecta más contigo mismo?",
+      category: "Rituales",
+      color: "from-green-600 to-purple-600"
+    },
+    {
+      question: "¿En qué aspecto de tu vida has sido más valiente sin darte cuenta?",
+      category: "Valentía Oculta",
+      color: "from-blue-600 to-orange-600"
+    },
+    {
+      question: "¿Qué historia sobre tu pasado has reinterpretado con el tiempo?",
+      category: "Reinterpretación",
+      color: "from-purple-600 to-cyan-600"
+    },
+    {
+      question: "¿Cuál es la lección que el universo parece querer enseñarte una y otra vez?",
+      category: "Patrones",
+      color: "from-pink-600 to-blue-600"
+    },
+    {
+      question: "¿Qué parte de tu identidad está más influenciada por otros?",
+      category: "Influencias",
+      color: "from-teal-600 to-red-600"
+    }
+  ];
+
+  const getNextQuestion = () => {
+    if (currentIndex >= shuffledQuestions.length - 1) {
+      // Si llegamos al final, volver a mezclar y empezar desde el inicio
+      const newShuffled = shuffleArray(reflectionQuestions);
+      setShuffledQuestions(newShuffled);
+      setCurrentIndex(0);
+      return newShuffled[0];
+    } else {
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      return shuffledQuestions[nextIndex];
+    }
+  };
+
+  const handleCardClick = () => {
+    if (isAnimating || shuffledQuestions.length === 0) return;
+    
+    if (!isFlipped) {
+      // Voltear para mostrar la pregunta
+      setIsAnimating(true);
+      setIsFlipped(true);
+      setTimeout(() => setIsAnimating(false), 500);
+    } else {
+      // Cambiar a nueva pregunta
+      setIsAnimating(true);
+      setIsFlipped(false);
+      
+      setTimeout(() => {
+        getNextQuestion();
+        setIsAnimating(false);
+      }, 500);
+    }
+  };
+
+  const resetGame = () => {
+    const newShuffled = shuffleArray(reflectionQuestions);
+    setShuffledQuestions(newShuffled);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setIsAnimating(false);
+  };
+
+  const toggleFavorite = () => {
+    setFavorites(prev => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(currentIndex)) {
+        newFavorites.delete(currentIndex);
+      } else {
+        newFavorites.add(currentIndex);
+      }
+      return newFavorites;
+    });
+  };
+
+  // Obtener pregunta actual
+  const currentQuestion = shuffledQuestions[currentIndex];
+  
+  // Si aún no se han cargado las preguntas mezcladas, mostrar loading
+  if (!currentQuestion) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Preparando las reflexiones...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-4000"></div>
+      </div>
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-white rounded-full opacity-30 animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${2 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 w-full max-w-md mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Reflexiones
+          </h1>
+          <p className="text-gray-300 text-sm">
+            Descubre preguntas que te harán pensar profundamente
+          </p>
+        </div>
+
+        {/* Card Container */}
+        <div className="relative perspective-1000 mb-8">
+          <div
+            className={`relative w-full h-96 transform-style-preserve-3d transition-transform duration-500 cursor-pointer ${
+              isFlipped ? 'rotate-y-180' : ''
+            } ${isAnimating ? 'scale-95' : 'hover:scale-105'} transition-all duration-300`}
+            onClick={handleCardClick}
+          >
+            {/* Card Front */}
+            <div className={`absolute inset-0 backface-hidden rounded-3xl bg-gradient-to-br ${currentQuestion.color} p-8 shadow-2xl border border-white/20`}>
+              <div className="flex flex-col h-full justify-between">
+                <div className="flex justify-between items-start">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                    <span className="text-white text-xs font-medium">{currentQuestion.category}</span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite();
+                    }}
+                    className="text-white/70 hover:text-white transition-colors duration-200"
+                  >
+                    {favorites.has(currentIndex) ? (
+                      <Heart className="w-6 h-6 fill-current" />
+                    ) : (
+                      <Heart className="w-6 h-6" />
+                    )}
+                  </button>
+                </div>
+                
+                <div className="flex-1 flex items-center justify-center">
+                  <Brain className="w-16 h-16 text-white/30 mb-4" />
+                </div>
+                
+                <div className="text-center">
+                  <p className="text-white/80 text-sm mb-2">Toca para revelar</p>
+                  <div className="flex justify-center space-x-1">
+                    {[...Array(3)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-2 h-2 bg-white/50 rounded-full animate-pulse"
+                        style={{ animationDelay: `${i * 0.3}s` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card Back */}
+            <div className={`absolute inset-0 backface-hidden rotate-y-180 rounded-3xl bg-gradient-to-br ${currentQuestion.color} p-8 shadow-2xl border border-white/20`}>
+              <div className="flex flex-col h-full">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                    <span className="text-white text-xs font-medium">{currentQuestion.category}</span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite();
+                    }}
+                    className="text-white/70 hover:text-white transition-colors duration-200"
+                  >
+                    {favorites.has(currentIndex) ? (
+                      <Heart className="w-6 h-6 fill-current" />
+                    ) : (
+                      <Heart className="w-6 h-6" />
+                    )}
+                  </button>
+                </div>
+                
+                <div className="flex-1 flex items-center justify-center">
+                  <p className="text-white text-lg font-medium text-center leading-relaxed">
+                    {currentQuestion.question}
+                  </p>
+                </div>
+                
+                <div className="text-center">
+                  <p className="text-white/70 text-sm">
+                    {isFlipped ? 'Toca para siguiente pregunta' : 'Toma tu tiempo para reflexionar'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={handleCardClick}
+            disabled={isAnimating}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 flex items-center space-x-2"
+          >
+            <Shuffle className="w-5 h-5" />
+            <span>{isFlipped ? 'Siguiente Pregunta' : 'Nueva Pregunta'}</span>
+          </button>
+          
+          <button
+            onClick={resetGame}
+            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 flex items-center space-x-2 border border-white/20"
+          >
+            <RotateCcw className="w-5 h-5" />
+            <span>Reiniciar</span>
+          </button>
+        </div>
+
+        {/* Progress indicator */}
+        <div className="mt-6 text-center">
+          <div className="flex justify-center items-center space-x-2 mb-2">
+            <Star className="w-4 h-4 text-yellow-400" />
+            <span className="text-white/70 text-sm">
+              {currentIndex + 1} de {shuffledQuestions.length} preguntas
+            </span>
+          </div>
+          <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500 ease-out"
+              style={{ width: `${((currentIndex + 1) / shuffledQuestions.length) * 100}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Favorites counter */}
+        {favorites.size > 0 && (
+          <div className="mt-4 text-center">
+            <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+              <Heart className="w-4 h-4 text-red-400 fill-current" />
+              <span className="text-white/70 text-sm">
+                {favorites.size} favorita{favorites.size !== 1 ? 's' : ''}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <style jsx>{`
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+        .transform-style-preserve-3d {
+          transform-style: preserve-3d;
+        }
+        .backface-hidden {
+          backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+          transform: rotateY(180deg);
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default ReflectionCardGame;
