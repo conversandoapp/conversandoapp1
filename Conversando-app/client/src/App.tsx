@@ -18,9 +18,9 @@ function Router() {
     setHasAccess(validAccess);
 
     // --- Wake up call sencillo ---
-    fetch(import.meta.env.VITE_API_URL + "/health").catch(() => {
-      console.log("Wake up call failed, pero no bloquea la app");
-    });
+    fetch("https://conversandoapp-back.onrender.com/wakeup").catch(() => {
+  console.log("No se pudo despertar el backend");
+  });
   }, []);
 
   const handleAccessGranted = () => {
