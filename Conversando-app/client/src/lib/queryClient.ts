@@ -26,9 +26,9 @@ export async function apiRequest(
 
   console.log(`📥 Respuesta de queryFn ${queryKey[0]}:`, res.status);
   await throwIfResNotOk(res);
-  const data = await res.json();
-  console.log("📦 Datos recibidos:", data);
-  return data;
+  const responseData = await res.json();
+  console.log("📦 Datos recibidos:", responseData);
+  return responseData;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
