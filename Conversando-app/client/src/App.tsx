@@ -13,14 +13,17 @@ function Router() {
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Check if user already has valid access
     const validAccess = sessionStorage.hasValidAccess();
     setHasAccess(validAccess);
 
-    // --- Wake up call sencillo ---
-    fetch("https://conversandoapp-back.onrender.com/wakeup").catch(() => {
-  console.log("No se pudo despertar el backend");
-  });
+    console.log("🚀 Lanzando wake up call al backend...");
+    fetch("https://conversandoapp-back.onrender.com/wakeup")
+      .then((res) => {
+        console.log("✅ Backend respondió al wakeup:", res.status);
+      })
+      .catch((err) => {
+        console.error("❌ No se pudo despertar el backend", err);
+      });
   }, []);
 
   const handleAccessGranted = () => {
