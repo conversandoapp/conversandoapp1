@@ -16,6 +16,11 @@ function Router() {
     // Check if user already has valid access
     const validAccess = sessionStorage.hasValidAccess();
     setHasAccess(validAccess);
+
+    // --- Wake up call sencillo ---
+    fetch(import.meta.env.VITE_API_URL + "/health").catch(() => {
+      console.log("Wake up call failed, pero no bloquea la app");
+    });
   }, []);
 
   const handleAccessGranted = () => {
