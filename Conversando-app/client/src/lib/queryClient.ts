@@ -24,9 +24,11 @@ export async function apiRequest(
     credentials: "include",
   });
 
-  console.log(`📥 Respuesta de ${url}:`, res.status);
+  console.log(`📥 Respuesta de queryFn ${queryKey[0]}:`, res.status);
   await throwIfResNotOk(res);
-  return res;
+  const data = await res.json();
+  console.log("📦 Datos recibidos:", data);
+  return data;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
@@ -36,6 +38,9 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     console.log("🔎 Ejecutando queryFn con key:", queryKey);
+    if (queryKey[0] === "/api/questions") {
+      console.log("📝 Intentando cargar preguntas desde Google Sheets...");
+    }
 
     const res = await fetch(`${API_BASE_URL}${queryKey[0] as string}`, { 
       credentials: "include",
