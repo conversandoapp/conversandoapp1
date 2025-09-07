@@ -24,14 +24,16 @@ export async function apiRequest(
     credentials: "include",
   });
 
-  console.log(`📥 Respuesta de queryFn ${queryKey[0]}:`, res.status);
+  console.log(`📥 Respuesta de ${url}:`, res.status);
   await throwIfResNotOk(res);
+
   const responseData = await res.json();
   console.log("📦 Datos recibidos:", responseData);
   return responseData;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
+
 export const getQueryFn: <T>(options: {
   on401: UnauthorizedBehavior;
 }) => QueryFunction<T> =
@@ -53,7 +55,10 @@ export const getQueryFn: <T>(options: {
 
     console.log(`📥 Respuesta de queryFn ${queryKey[0]}:`, res.status);
     await throwIfResNotOk(res);
-    return await res.json();
+
+    const responseData = await res.json();
+    console.log("📦 Datos recibidos de queryFn:", responseData);
+    return responseData;
   };
 
 export const queryClient = new QueryClient({
