@@ -17,7 +17,7 @@ export async function apiRequest(
 ): Promise<Response> {
   console.log(`📡 apiRequest → ${method} ${API_BASE_URL}${url}`, data || "");
 
-  const res = await fetch(`${API_BASE_URL}${url}`, {   
+  const res = await fetch(`${API_BASE_URL}${url}`, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
@@ -40,11 +40,16 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     console.log("🔎 Ejecutando queryFn con key:", queryKey);
+
     if (queryKey[0] === "/api/questions") {
       console.log("📝 Intentando cargar preguntas desde Google Sheets...");
     }
 
-    const res = await fetch(`${API_BASE_URL}${queryKey[0] as string}`, { 
+    if (queryKey[0] === "/api/codes") {
+      console.log("🔐 Intentando cargar códigos desde Google Sheets...");
+    }
+
+    const res = await fetch(`${API_BASE_URL}${queryKey[0] as string}`, {
       credentials: "include",
     });
 
