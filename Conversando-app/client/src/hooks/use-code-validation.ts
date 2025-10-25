@@ -5,8 +5,8 @@ import type { CodeValidationRequest, CodeValidationResponse } from "@shared/sche
 export function useCodeValidation() {
   return useMutation({
     mutationFn: async (data: CodeValidationRequest): Promise<CodeValidationResponse> => {
-      const response = await apiRequest("POST", "/api/validate-code", data);
-      return response.json();
+      // ✅ POST con body JSON; apiRequest ya devuelve el objeto parseado
+      return await apiRequest<CodeValidationResponse>("POST", "/api/validate-code", data);
     },
   });
 }
