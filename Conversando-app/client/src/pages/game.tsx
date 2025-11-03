@@ -1,11 +1,28 @@
 import { useEffect } from 'react';
 import { ReflectionCard } from '@/components/reflection-card';
 import { useQuestions } from '@/hooks/use-questions';
+
 const backgroundImage = '/background.png';
 
 interface GameProps {
   onLogout?: () => void;
 }
+
+/** Opcional: mapea categorías conocidas a gradientes Tailwind.
+ *  Si una categoría no está aquí, usaremos un color de respaldo por índice. */
+const categoryColors: Record<string, string> = {
+  "Crecimiento Personal": "from-purple-600 to-pink-600",
+  "Sabiduría": "from-blue-600 to-cyan-600",
+  "Pasión": "from-orange-600 to-red-600",
+  "Superación": "from-green-600 to-teal-600",
+  "Autenticidad": "from-indigo-600 to-purple-600",
+  "Valentía": "from-yellow-600 to-orange-600",
+  "Gratitud": "from-amber-600 to-yellow-600",
+  "Resiliencia": "from-blue-600 to-purple-600",
+  "Amor": "from-red-600 to-pink-600",
+  "Aventura": "from-orange-600 to-red-600",
+  // agrega aquí más si quieres colores específicos por categoría
+};
 
 const fallbackColors = [
   "from-purple-600 to-pink-600",
@@ -20,6 +37,8 @@ const fallbackColors = [
 ];
 
 const colorByIndex = (i: number) => fallbackColors[i % fallbackColors.length];
+const colorForCategory = (category?: string, i?: number) =>
+  (category && categoryColors[category]) || colorByIndex(i ?? 0);
 
 export default function Game({ onLogout }: GameProps) {
   const { data: questionsData, isLoading, error } = useQuestions();
@@ -52,17 +71,17 @@ export default function Game({ onLogout }: GameProps) {
     );
   }
 
-  // Normaliza: backend trae { id, question }
+  // Ahora el backend trae [{ question, category }]
   const list = Array.isArray(questionsData) ? questionsData : [];
 
-  // Mapea al shape que espera ReflectionCard (suponiendo { question, category, color })
+  // Mapea al shape que espera ReflectionCard: { question, category, color }
   const questionsForCard = list.map((q, i) => ({
     question: q.question,
-    category: "Reflexión",
-    color: colorByIndex(i),
+    category: q.category || "Reflexión",
+    color: colorForCategory(q.category, i),
   }));
 
-  // DEBUG UI: si algo sale raro, te mostramos lo que llegó
+  // DEBUG UI si no hay preguntas
   if (questionsForCard.length === 0) {
     return (
       <div
